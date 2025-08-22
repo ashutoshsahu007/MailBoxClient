@@ -1,15 +1,25 @@
-import React from "react";
-import Auth from "./components/Auth";
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import MailBoxClient from "./components/MailBoxClient";
+import Header from "./components/Header";
+import AuthPage from "./pages/AuthPage";
+import HomePage from "./pages/HomePage";
+import { useContext } from "react";
+import AuthContext from "./store/auth-context";
 
 const App = () => {
+  const { isLoggedIn } = useContext(AuthContext);
+
   return (
-    <div>
+    <div className="min-h-screen">
+      <Header />
       <Routes>
-        <Route path="/" element={<Auth />} />
-        <Route path="/mail" element={<MailBoxClient />} />
+        <Route path="/" element={<AuthPage />} />
+        <Route
+          path="/mail"
+          element={isLoggedIn ? <MailBoxClient /> : <Navigate to="/" replace />}
+        />
+        <Route path="*" element={<HomePage />} />
       </Routes>
     </div>
   );

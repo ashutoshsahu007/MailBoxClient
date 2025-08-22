@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../store/auth-context";
 
-const Signup = () => {
+const AuthForm = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [Login, setIsLogin] = useState(true);
   const navigate = useNavigate();
+
+  const authCtx = useContext(AuthContext);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -52,49 +55,17 @@ const Signup = () => {
         });
       })
       .then((data) => {
-        Login && navigate("/mail");
-        console.log(data);
+        authCtx.login(data.idToken);
+        isLogg && navigate("/mail");
+        !Login && alert("SignUp Successfull");
       })
       .catch((err) => {
         alert(err.message);
       });
   };
 
-  const handleLogin = () => {
-    setIsLogin((prev) => !prev);
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Navbar */}
-      <nav className="w-full bg-white shadow-sm flex items-center justify-between px-6 md:px-12 py-4">
-        <div className="flex items-center space-x-2">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Pi-symbol.svg"
-            alt="logo"
-            className="w-8 h-8"
-          />
-          <span className="text-xl font-semibold text-blue-600">MyWebLink</span>
-        </div>
-
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex space-x-6 text-gray-700 font-medium">
-          <li className="hover:text-blue-600 cursor-pointer">Home</li>
-          <li className="hover:text-blue-600 cursor-pointer">Products</li>
-          <li className="hover:text-blue-600 cursor-pointer">About Us</li>
-        </ul>
-
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden flex flex-col space-y-1"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <span className="w-6 h-0.5 bg-gray-800"></span>
-          <span className="w-6 h-0.5 bg-gray-800"></span>
-          <span className="w-6 h-0.5 bg-gray-800"></span>
-        </button>
-      </nav>
-
+    <div className="mt-10 flex flex-col">
       {/* Mobile Dropdown */}
       {menuOpen && (
         <div className="md:hidden bg-white shadow-md px-6 py-4 space-y-2 text-gray-700 font-medium">
@@ -104,7 +75,6 @@ const Signup = () => {
         </div>
       )}
 
-      {/* Background Shape + Form */}
       <div className="relative flex flex-1 justify-center items-center px-4 sm:px-6">
         {/* Signup Card */}
         <div className="relative bg-white shadow-md border rounded-md w-full max-w-md p-6 sm:p-8 z-10">
@@ -152,7 +122,7 @@ const Signup = () => {
           {/* Login Redirect */}
           <div className="mt-6">
             <button
-              onClick={handleLogin}
+              onClick={() => setIsLogin((prev) => !prev)}
               className="w-full cursor-pointer border rounded py-2 bg-green-50 hover:bg-green-100 transition"
             >
               {Login
@@ -166,4 +136,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default AuthForm;
