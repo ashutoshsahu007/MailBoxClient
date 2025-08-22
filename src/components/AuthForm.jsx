@@ -55,8 +55,8 @@ const AuthForm = () => {
         });
       })
       .then((data) => {
-        authCtx.login(data.idToken);
-        isLogg && navigate("/mail");
+        authCtx.login(data.idToken, data.email);
+        Login && navigate("/mail");
         !Login && alert("SignUp Successfull");
       })
       .catch((err) => {

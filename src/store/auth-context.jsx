@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 // Create Auth Context
 const AuthContext = createContext({
   token: "",
+  email: "",
   isLoggedIn: false,
-  login: () => {},
+  login: (token, email) => {},
   logout: () => {},
 });
 
@@ -14,32 +15,39 @@ export default AuthContext;
 export const AuthContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  // Load saved token and login time from localStorage
+  // Load saved data from localStorage
   const storedToken = localStorage.getItem("token");
   const storedLoginTime = localStorage.getItem("loginTime");
+  const storedEmail = localStorage.getItem("email");
 
-  // If the token is already expired before app loads
+  // Check token expiry
   if (storedLoginTime && Date.now() - storedLoginTime > 5 * 60 * 1000) {
     localStorage.removeItem("token");
     localStorage.removeItem("loginTime");
+    localStorage.removeItem("email");
     navigate("/");
   }
 
   const [token, setToken] = useState(storedToken);
+  const [email, setEmail] = useState(storedEmail || "");
   const isLoggedIn = !!token;
 
   // Login Handler
-  const loginHandler = (newToken) => {
+  const loginHandler = (newToken, userEmail) => {
     setToken(newToken);
+    setEmail(userEmail);
     localStorage.setItem("token", newToken);
     localStorage.setItem("loginTime", Date.now());
+    localStorage.setItem("email", userEmail);
   };
 
   // Logout Handler
   const logoutHandler = () => {
     setToken(null);
+    setEmail("");
     localStorage.removeItem("token");
     localStorage.removeItem("loginTime");
+    localStorage.removeItem("email");
   };
 
   // Auto logout after 5 minutes
@@ -56,6 +64,7 @@ export const AuthContextProvider = ({ children }) => {
   // Context value
   const contextValue = {
     token,
+    email,
     isLoggedIn,
     login: loginHandler,
     logout: logoutHandler,

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import AuthContext from "../store/auth-context";
 
 const FIREBASE_BASE_URL =
   "https://mailboxclient-91321-default-rtdb.firebaseio.com/";
@@ -10,9 +11,10 @@ const ComposeMail = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
+  const authCtx = useContext(AuthContext);
 
   // Example: logged-in user's email (replace with auth context if available)
-  const senderEmail = "sender@example.com";
+  const senderEmail = authCtx.email;
 
   // Utility: sanitize email to use as Firebase key
   const sanitizeEmail = (email) => email.replace(/[@.]/g, "_");
