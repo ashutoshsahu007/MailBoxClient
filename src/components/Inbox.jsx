@@ -34,7 +34,9 @@ const Inbox = () => {
       }
     };
 
-    fetchInbox();
+    setTimeout(() => {
+      fetchInbox();
+    }, 2000);
   }, [authCtx.email]);
 
   // Mark as read (updates Firebase too)
