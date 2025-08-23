@@ -7,10 +7,10 @@ const Header = () => {
   const authCtx = useContext(AuthContext);
   return (
     <header className="w-full bg-white shadow-sm flex items-center justify-between px-6 md:px-12 py-4 sticky top-0 z-50 ">
-      <div className="flex items-center space-x-2">
+      <Link to="/" className="flex items-center space-x-2">
         <img src="/gmail.png" alt="logo" className="w-8 h-8" />
         <span className="text-3xl font-bold text-[#EA4335]">MailBoxClient</span>
-      </div>
+      </Link>
 
       {/* Desktop Menu */}
 

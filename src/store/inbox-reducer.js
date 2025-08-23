@@ -21,6 +21,15 @@ export const inboxReducer = (state, action) => {
         unreadCount: updatedMails.filter((mail) => !mail.read).length,
       };
 
+    case "DELETE_MAIL":
+      const undeletedMails = state.mails.filter(
+        (mail) => mail.id !== action.payload
+      );
+      return {
+        mails: undeletedMails,
+        unreadCount: undeletedMails.filter((mail) => !mail.read).length,
+      };
+
     default:
       return state;
   }

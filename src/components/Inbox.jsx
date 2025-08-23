@@ -50,6 +50,24 @@ const Inbox = () => {
     setSelectedMail({ ...mail, read: true }); // open the mail
   };
 
+  // ✅ Delete mail
+  const deleteMail = async (mail) => {
+    try {
+      const userKey = sanitizeEmail(authCtx.email);
+      await fetch(
+        `${FIREBASE_BASE_URL}/users/${userKey}/inbox/${mail.id}.json`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      dispatch({ type: "DELETE_MAIL", payload: mail.id }); // remove from state
+      setSelectedMail(null); // go back to inbox
+    } catch (err) {
+      console.error("Error deleting mail:", err);
+    }
+  };
+
   // Format timestamp → readable date & time
   const formatDateTime = (timestamp) => {
     if (!timestamp) return "";
@@ -90,12 +108,20 @@ const Inbox = () => {
         </>
       ) : (
         <div className="border p-4 rounded shadow">
-          <button
-            onClick={() => setSelectedMail(null)}
-            className="text-blue-500 underline mb-4 cursor-pointer"
-          >
-            ← Back
-          </button>
+          <div className="flex gap-4 mb-4">
+            <button
+              onClick={() => setSelectedMail(null)}
+              className="text-blue-500 underline cursor-pointer"
+            >
+              ← Back
+            </button>
+            <button
+              onClick={() => deleteMail(selectedMail)}
+              className="text-red-500 underline cursor-pointer"
+            >
+              🗑 Delete
+            </button>
+          </div>
           <h3 className="text-lg font-bold mb-2">{selectedMail.subject}</h3>
           <p className="text-sm text-gray-500 mb-1">
             From: {selectedMail.from}
