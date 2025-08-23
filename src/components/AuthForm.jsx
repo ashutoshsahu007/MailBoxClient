@@ -56,7 +56,7 @@ const AuthForm = () => {
       })
       .then((data) => {
         authCtx.login(data.idToken, data.email);
-        Login && navigate("/mail");
+        Login && navigate("/compose");
         !Login && alert("SignUp Successfull");
       })
       .catch((err) => {

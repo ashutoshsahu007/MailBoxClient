@@ -13,6 +13,7 @@ const Sentbox = () => {
   const sanitizeEmail = (email) => email.replace(/[@.]/g, "_");
 
   useEffect(() => {
+    console.log("useEffect called ");
     const fetchSentbox = async () => {
       try {
         const userKey = sanitizeEmail(currentUserEmail);

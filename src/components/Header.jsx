@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../store/auth-context";
+import { LogOut } from "lucide-react";
 
 const Header = () => {
   const authCtx = useContext(AuthContext);
@@ -12,23 +13,31 @@ const Header = () => {
       </div>
 
       {/* Desktop Menu */}
-      <ul className="hidden md:flex space-x-6 text-gray-700 font-medium">
-        <li className="hover:text-blue-600 cursor-pointer">
-          <Link to="/inbox">Inbox</Link>
-        </li>
 
-        <li className="hover:text-blue-600 cursor-pointer">
-          <Link to="/sentbox">Sentbox</Link>
-        </li>
-
-        {authCtx.isLoggedIn && (
+      {authCtx.isLoggedIn && (
+        <ul className="hidden md:flex space-x-6 text-gray-700 font-medium">
           <li className="hover:text-blue-600 cursor-pointer">
-            <Link to="/" onClick={() => authCtx.logout()}>
-              Logout
-            </Link>
+            <Link to="/inbox">Inbox</Link>
           </li>
-        )}
-      </ul>
+
+          <li className="hover:text-blue-600 cursor-pointer">
+            <Link to="/sentbox">Sentbox</Link>
+          </li>
+
+          <li className="hover:text-blue-600 cursor-pointer">
+            <Link to="/compose">Compose</Link>
+          </li>
+          <li>
+            <button
+              onClick={authCtx.logout}
+              className="flex items-center cursor-pointer gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+          </li>
+        </ul>
+      )}
 
       {/* Mobile Hamburger */}
       <button

@@ -1,6 +1,6 @@
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
-import MailBoxClient from "./components/MailBoxClient";
+import MailBoxClient from "./components/ComposeMail";
 import Header from "./components/Header";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
@@ -16,14 +16,17 @@ const App = () => {
     <div className="min-h-screen">
       <Header />
       <Routes>
-        <Route path="/" element={<AuthPage />} />
         <Route
-          path="/mail"
-          element={isLoggedIn ? <MailBoxClient /> : <Navigate to="/" replace />}
+          path="/"
+          element={!isLoggedIn ? <AuthPage /> : <Navigate to="/compose" />}
         />
         <Route
           path="/inbox"
           element={isLoggedIn ? <Inbox /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/compose"
+          element={isLoggedIn ? <MailBoxClient /> : <Navigate to="/" replace />}
         />
         <Route
           path="/sentbox"
