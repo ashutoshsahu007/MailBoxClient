@@ -34,7 +34,7 @@ const Inbox = () => {
       }
     };
 
-    setTimeout(() => {
+    setInterval(() => {
       fetchInbox();
     }, 2000);
   }, [authCtx.email]);
