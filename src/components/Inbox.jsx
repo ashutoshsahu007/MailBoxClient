@@ -7,7 +7,7 @@ const FIREBASE_BASE_URL =
 
 const Inbox = () => {
   const [state, dispatch] = useReducer(inboxReducer, initialState);
-  const [selectedMail, setSelectedMail] = useState(null); // for opening mail
+  const [selectedMail, setSelectedMail] = useState(null);
   const authCtx = useContext(AuthContext);
 
   const sanitizeEmail = (email) => email.replace(/[@.]/g, "_");
@@ -27,19 +27,33 @@ const Inbox = () => {
             id,
             ...mail,
           }));
-          dispatch({ type: "SET_MAILS", payload: mails });
+
+          // ✅ Only dispatch if mails actually changed
+          const prevIds = state.mails
+            .map((m) => m.id)
+            .sort()
+            .join(",");
+          const newIds = mails
+            .map((m) => m.id)
+            .sort()
+            .join(",");
+
+          if (prevIds !== newIds || state.mails.length !== mails.length) {
+            dispatch({ type: "SET_MAILS", payload: mails });
+          }
         }
       } catch (err) {
         console.error(err);
       }
     };
 
-    setInterval(() => {
-      fetchInbox();
-    }, 2000);
-  }, [authCtx.email]);
+    const intervalId = setInterval(fetchInbox, 2000);
+    fetchInbox();
 
-  // Mark as read (updates Firebase too)
+    return () => clearInterval(intervalId); // ✅ proper cleanup
+  }, [authCtx.email, state.mails]);
+
+  // Mark as read
   const markAsRead = async (mail) => {
     const userKey = sanitizeEmail(authCtx.email);
     await fetch(`${FIREBASE_BASE_URL}/users/${userKey}/inbox/${mail.id}.json`, {
@@ -49,32 +63,29 @@ const Inbox = () => {
     });
 
     dispatch({ type: "MARK_AS_READ", payload: mail.id });
-    setSelectedMail({ ...mail, read: true }); // open the mail
+    setSelectedMail({ ...mail, read: true });
   };
 
-  // ✅ Delete mail
+  // Delete mail
   const deleteMail = async (mail) => {
     try {
       const userKey = sanitizeEmail(authCtx.email);
       await fetch(
         `${FIREBASE_BASE_URL}/users/${userKey}/inbox/${mail.id}.json`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
 
-      dispatch({ type: "DELETE_MAIL", payload: mail.id }); // remove from state
-      setSelectedMail(null); // go back to inbox
+      dispatch({ type: "DELETE_MAIL", payload: mail.id });
+      setSelectedMail(null);
     } catch (err) {
       console.error("Error deleting mail:", err);
     }
   };
 
-  // Format timestamp → readable date & time
   const formatDateTime = (timestamp) => {
     if (!timestamp) return "";
     const date = new Date(timestamp);
-    return date.toLocaleString(); // e.g., 8/22/2025, 4:10:45 PM
+    return date.toLocaleString();
   };
 
   return (
