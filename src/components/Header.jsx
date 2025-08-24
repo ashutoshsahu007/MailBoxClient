@@ -17,15 +17,15 @@ const Header = () => {
       {authCtx.isLoggedIn && (
         <ul className="hidden md:flex space-x-6 text-gray-700 font-medium">
           <li className="hover:text-blue-600 cursor-pointer">
+            <Link to="/compose">Compose</Link>
+          </li>
+
+          <li className="hover:text-blue-600 cursor-pointer">
             <Link to="/inbox">Inbox</Link>
           </li>
 
           <li className="hover:text-blue-600 cursor-pointer">
             <Link to="/sentbox">Sentbox</Link>
-          </li>
-
-          <li className="hover:text-blue-600 cursor-pointer">
-            <Link to="/compose">Compose</Link>
           </li>
           <li>
             <button
