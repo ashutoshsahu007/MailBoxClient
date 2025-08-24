@@ -73,7 +73,6 @@ const ComposeMail = () => {
         {/* Header */}
         <div className="flex justify-between items-center border-b p-3">
           <h2 className="font-semibold text-gray-700">New Message</h2>
-          <button className="text-gray-500 hover:text-red-500">✖</button>
         </div>
 
         {/* To */}

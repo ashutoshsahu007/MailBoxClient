@@ -48,6 +48,7 @@ export const AuthContextProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("loginTime");
     localStorage.removeItem("email");
+    navigate("/");
   };
 
   // Auto logout after 5 minutes

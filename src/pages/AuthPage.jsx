@@ -3,11 +3,7 @@ import AuthForm from "../components/AuthForm";
 import Layout from "../components/Layout";
 
 const AuthPage = () => {
-  return (
-    <Layout>
-      <AuthForm />
-    </Layout>
-  );
+  return <AuthForm />;
 };
 
 export default AuthPage;

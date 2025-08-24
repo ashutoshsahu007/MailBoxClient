@@ -12,21 +12,21 @@ const App = () => {
   const { isLoggedIn } = useContext(AuthContext);
 
   return (
-    <div className="min-h-screen">
+    <div>
       <Routes>
         <Route
           path="/"
           element={!isLoggedIn ? <AuthPage /> : <Navigate to="/compose" />}
         />
         <Route
-          path="/inbox"
-          element={isLoggedIn ? <InboxPage /> : <Navigate to="/" replace />}
-        />
-        <Route
           path="/compose"
           element={
             isLoggedIn ? <ComposeMailPage /> : <Navigate to="/" replace />
           }
+        />
+        <Route
+          path="/inbox"
+          element={isLoggedIn ? <InboxPage /> : <Navigate to="/" replace />}
         />
         <Route
           path="/sentbox"
