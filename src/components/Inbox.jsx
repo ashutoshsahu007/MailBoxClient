@@ -1,9 +1,8 @@
 import { useEffect, useReducer, useContext, useState } from "react";
-import { inboxReducer, initialState } from "../store/inbox-reducer";
+import { inboxReducer, initialState } from "../store/mail-reducer";
 import AuthContext from "../store/auth-context";
 
-const FIREBASE_BASE_URL =
-  "https://mailboxclient-91321-default-rtdb.firebaseio.com/";
+const FIREBASE_BASE_URL = import.meta.env.VITE_FIREBASE_URL;
 
 const Inbox = () => {
   const [state, dispatch] = useReducer(inboxReducer, initialState);

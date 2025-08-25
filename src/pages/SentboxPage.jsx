@@ -1,4 +1,3 @@
-import React from "react";
 import Sentbox from "../components/Sentbox";
 import Layout from "../Layout/Layout";
 

@@ -1,18 +1,90 @@
-import { useState, useContext } from "react";
+import { useEffect, useReducer, useContext, useState } from "react";
+import { inboxReducer, initialState } from "../store/mail-reducer";
 import AuthContext from "../store/auth-context";
-import { useSentMails } from "../hooks/useSentMails";
 
-const formatDateTime = (timestamp) =>
-  timestamp ? new Date(timestamp).toLocaleString() : "";
+const FIREBASE_BASE_URL = import.meta.env.VITE_FIREBASE_URL;
 
-const Inbox = () => {
-  const { email } = useContext(AuthContext);
-  const { state, markAsRead, deleteMail } = useSentMails(email);
+const Sentbox = () => {
+  const [state, dispatch] = useReducer(inboxReducer, initialState);
   const [selectedMail, setSelectedMail] = useState(null);
+  const authCtx = useContext(AuthContext);
 
-  if (!state.mails.length) {
-    return <p className="text-center text-gray-500">No mails found 📭</p>;
-  }
+  const sanitizeEmail = (email) => email.replace(/[@.]/g, "_");
+
+  // Fetch inbox mails
+  useEffect(() => {
+    const fetchSentMails = async () => {
+      try {
+        const userKey = sanitizeEmail(authCtx.email);
+        const res = await fetch(
+          `${FIREBASE_BASE_URL}/users/${userKey}/sent.json`
+        );
+        const data = await res.json();
+
+        if (data) {
+          const mails = Object.entries(data).map(([id, mail]) => ({
+            id,
+            ...mail,
+          }));
+
+          // ✅ Only dispatch if mails actually changed
+          const prevIds = state.mails
+            .map((m) => m.id)
+            .sort()
+            .join(",");
+          const newIds = mails
+            .map((m) => m.id)
+            .sort()
+            .join(",");
+
+          if (prevIds !== newIds || state.mails.length !== mails.length) {
+            dispatch({ type: "SET_MAILS", payload: mails });
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const intervalId = setInterval(fetchSentMails, 2000);
+
+    return () => clearInterval(intervalId); // ✅ proper cleanup
+  }, [authCtx.email, state.mails]);
+
+  // Mark as read
+  const markAsRead = async (mail) => {
+    const userKey = sanitizeEmail(authCtx.email);
+    await fetch(`${FIREBASE_BASE_URL}/users/${userKey}/sent/${mail.id}.json`, {
+      method: "PATCH",
+      body: JSON.stringify({ read: true }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    dispatch({ type: "MARK_AS_READ", payload: mail.id });
+    setSelectedMail({ ...mail, read: true });
+  };
+
+  // Delete mail
+  const deleteMail = async (mail) => {
+    try {
+      const userKey = sanitizeEmail(authCtx.email);
+      await fetch(
+        `${FIREBASE_BASE_URL}/users/${userKey}/sent/${mail.id}.json`,
+        { method: "DELETE" }
+      );
+
+      dispatch({ type: "DELETE_MAIL", payload: mail.id });
+      setSelectedMail(null);
+    } catch (err) {
+      console.error("Error deleting mail:", err);
+    }
+  };
+
+  const formatDateTime = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+  };
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
@@ -27,10 +99,7 @@ const Inbox = () => {
               <li
                 key={mail.id}
                 className="flex items-center justify-between p-3 border rounded cursor-pointer hover:bg-gray-50"
-                onClick={() => {
-                  markAsRead(mail);
-                  setSelectedMail(mail);
-                }}
+                onClick={() => markAsRead(mail)}
               >
                 <div className="flex items-center space-x-2">
                   {!mail.read && (
@@ -58,10 +127,7 @@ const Inbox = () => {
               ← Back
             </button>
             <button
-              onClick={() => {
-                deleteMail(selectedMail.id);
-                setSelectedMail(null);
-              }}
+              onClick={() => deleteMail(selectedMail)}
               className="text-red-500 underline cursor-pointer"
             >
               🗑 Delete
@@ -81,4 +147,4 @@ const Inbox = () => {
   );
 };
 
-export default Inbox;
+export default Sentbox;
