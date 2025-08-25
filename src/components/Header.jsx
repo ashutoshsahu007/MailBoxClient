@@ -7,6 +7,14 @@ const Header = () => {
   const authCtx = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // ✅ active link class
+  const linkClasses = ({ isActive }) =>
+    `transition-colors ${
+      isActive
+        ? "text-blue-600 font-semibold"
+        : "text-gray-700 hover:text-blue-600"
+    }`;
+
   return (
     <header className="w-full bg-white shadow-sm flex items-center justify-between px-6 md:px-12 py-4 sticky top-0 z-50">
       {/* Logo */}
@@ -19,15 +27,21 @@ const Header = () => {
 
       {/* Desktop Menu */}
       {authCtx.isLoggedIn && (
-        <ul className="hidden md:flex md:items-center space-x-6 text-gray-700 font-medium">
-          <li className="hover:text-blue-600 cursor-pointer">
-            <NavLink to="/compose">Compose</NavLink>
+        <ul className="hidden md:flex md:items-center space-x-6 font-medium">
+          <li>
+            <NavLink to="/compose" className={linkClasses}>
+              Compose
+            </NavLink>
           </li>
-          <li className="hover:text-blue-600 cursor-pointer">
-            <NavLink to="/inbox">Inbox</NavLink>
+          <li>
+            <NavLink to="/inbox" className={linkClasses}>
+              Inbox
+            </NavLink>
           </li>
-          <li className="hover:text-blue-600 cursor-pointer">
-            <NavLink to="/sentbox">Sentbox</NavLink>
+          <li>
+            <NavLink to="/sentbox" className={linkClasses}>
+              Sentbox
+            </NavLink>
           </li>
           <li>
             <button
@@ -55,11 +69,11 @@ const Header = () => {
 
           {/* Mobile Dropdown */}
           {menuOpen && (
-            <ul className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg flex flex-col p-4 space-y-3 text-gray-700 font-medium z-50">
+            <ul className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg flex flex-col p-4 space-y-3 font-medium z-50">
               <li>
                 <NavLink
                   to="/compose"
-                  className="block hover:text-blue-600"
+                  className={linkClasses}
                   onClick={() => setMenuOpen(false)}
                 >
                   Compose
@@ -68,7 +82,7 @@ const Header = () => {
               <li>
                 <NavLink
                   to="/inbox"
-                  className="block hover:text-blue-600"
+                  className={linkClasses}
                   onClick={() => setMenuOpen(false)}
                 >
                   Inbox
@@ -77,7 +91,7 @@ const Header = () => {
               <li>
                 <NavLink
                   to="/sentbox"
-                  className="block hover:text-blue-600"
+                  className={linkClasses}
                   onClick={() => setMenuOpen(false)}
                 >
                   Sentbox

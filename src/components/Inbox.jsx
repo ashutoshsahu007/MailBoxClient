@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useContext, useState } from "react";
-import AuthContext from "../store/auth-context";
 import { inboxReducer, initialState } from "../store/inbox-reducer";
+import AuthContext from "../store/auth-context";
 
 const FIREBASE_BASE_URL =
   "https://mailboxclient-91321-default-rtdb.firebaseio.com/";
@@ -48,7 +48,6 @@ const Inbox = () => {
     };
 
     const intervalId = setInterval(fetchInbox, 2000);
-    fetchInbox();
 
     return () => clearInterval(intervalId); // ✅ proper cleanup
   }, [authCtx.email, state.mails]);

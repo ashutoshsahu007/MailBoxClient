@@ -1,4 +1,3 @@
-// inbox-reducer.js
 export const initialState = {
   mails: [],
   unreadCount: 0,

@@ -12,8 +12,6 @@ const AuthForm = () => {
 
   const authCtx = useContext(AuthContext);
 
-  console.log("loginnnnnnnnn", Login);
-
   const handleFormSubmit = (e) => {
     e.preventDefault();
     let url = "";
@@ -54,9 +52,9 @@ const AuthForm = () => {
         });
       })
       .then((data) => {
+        !Login && alert("SignUp Successful");
         Login && authCtx.login(data.idToken, data.email);
         Login && navigate("/compose");
-        !Login && alert("SignUp Successful");
       })
       .catch((err) => alert(err.message));
   };

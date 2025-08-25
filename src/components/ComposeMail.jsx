@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import AuthContext from "../store/auth-context";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const FIREBASE_BASE_URL =
   "https://mailboxclient-91321-default-rtdb.firebaseio.com/";
