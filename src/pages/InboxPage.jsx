@@ -1,5 +1,5 @@
 import Inbox from "../components/Inbox";
-import Layout from "../components/Layout";
+import Layout from "../Layout/Layout";
 import React from "react";
 
 const InboxPage = () => {

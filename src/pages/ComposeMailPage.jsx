@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../components/Layout";
+import Layout from "../Layout/Layout";
 import ComposeMail from "../components/ComposeMail";
 
 const ComposeMailPage = () => {
