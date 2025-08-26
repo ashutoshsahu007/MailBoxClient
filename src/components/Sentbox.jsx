@@ -1,6 +1,9 @@
 import { useEffect, useReducer, useContext, useState } from "react";
 import { inboxReducer, initialState } from "../store/mail-reducer";
 import AuthContext from "../store/auth-context";
+import { formatDateTime } from "../utils/date";
+import { sanitizeEmail } from "../utils/sanitizeEmail";
+import useFetch from "../hooks/useFetch";
 
 const FIREBASE_BASE_URL = import.meta.env.VITE_FIREBASE_URL;
 
@@ -9,47 +12,11 @@ const Sentbox = () => {
   const [selectedMail, setSelectedMail] = useState(null);
   const authCtx = useContext(AuthContext);
 
-  const sanitizeEmail = (email) => email.replace(/[@.]/g, "_");
+  const userKey = sanitizeEmail(authCtx.email);
 
-  // Fetch inbox mails
-  useEffect(() => {
-    const fetchSentMails = async () => {
-      try {
-        const userKey = sanitizeEmail(authCtx.email);
-        const res = await fetch(
-          `${FIREBASE_BASE_URL}/users/${userKey}/sent.json`
-        );
-        const data = await res.json();
+  const url = `${FIREBASE_BASE_URL}/users/${userKey}/sent.json`;
 
-        if (data) {
-          const mails = Object.entries(data).map(([id, mail]) => ({
-            id,
-            ...mail,
-          }));
-
-          // ✅ Only dispatch if mails actually changed
-          const prevIds = state.mails
-            .map((m) => m.id)
-            .sort()
-            .join(",");
-          const newIds = mails
-            .map((m) => m.id)
-            .sort()
-            .join(",");
-
-          if (prevIds !== newIds || state.mails.length !== mails.length) {
-            dispatch({ type: "SET_MAILS", payload: mails });
-          }
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const intervalId = setInterval(fetchSentMails, 2000);
-
-    return () => clearInterval(intervalId); // ✅ proper cleanup
-  }, [authCtx.email, state.mails]);
+  useFetch(url, state, dispatch);
 
   // Mark as read
   const markAsRead = async (mail) => {
@@ -78,12 +45,6 @@ const Sentbox = () => {
     } catch (err) {
       console.error("Error deleting mail:", err);
     }
-  };
-
-  const formatDateTime = (timestamp) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toLocaleString();
   };
 
   return (
