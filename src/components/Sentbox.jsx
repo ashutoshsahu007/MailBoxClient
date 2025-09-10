@@ -5,7 +5,8 @@ import { formatDateTime } from "../utils/date";
 import { sanitizeEmail } from "../utils/sanitizeEmail";
 import useFetch from "../hooks/useFetch";
 
-const FIREBASE_BASE_URL = import.meta.env.VITE_FIREBASE_URL;
+const FIREBASE_BASE_URL =
+  "https://mailboxclient-91321-default-rtdb.firebaseio.com/";
 
 const Sentbox = () => {
   const [state, dispatch] = useReducer(inboxReducer, initialState);

@@ -5,7 +5,8 @@ import useFetch from "../hooks/useFetch";
 import { formatDateTime } from "../utils/date";
 import { sanitizeEmail } from "../utils/sanitizeEmail";
 
-const FIREBASE_BASE_URL = import.meta.env.VITE_FIREBASE_URL;
+const FIREBASE_BASE_URL =
+  "https://mailboxclient-91321-default-rtdb.firebaseio.com/";
 
 const Inbox = () => {
   const [selectedMail, setSelectedMail] = useState(null);
@@ -53,7 +54,7 @@ const Inbox = () => {
           <h2 className="text-xl font-semibold mb-4">
             Inbox ({state.unreadCount} unread)
           </h2>
-          {console.log("inboooooox")}
+
           <ul className="space-y-2">
             {state.mails.map((mail) => (
               <li

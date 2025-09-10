@@ -12,29 +12,25 @@ const App = () => {
   const { isLoggedIn } = useContext(AuthContext);
 
   return (
-    <div>
-      <Routes>
-        <Route
-          path="/"
-          element={!isLoggedIn ? <AuthPage /> : <Navigate to="/compose" />}
-        />
-        <Route
-          path="/compose"
-          element={
-            isLoggedIn ? <ComposeMailPage /> : <Navigate to="/" replace />
-          }
-        />
-        <Route
-          path="/inbox"
-          element={isLoggedIn ? <InboxPage /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/sentbox"
-          element={isLoggedIn ? <SentboxPage /> : <Navigate to="/" replace />}
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={!isLoggedIn ? <AuthPage /> : <Navigate to="/compose" />}
+      />
+      <Route
+        path="/compose"
+        element={isLoggedIn ? <ComposeMailPage /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/inbox"
+        element={isLoggedIn ? <InboxPage /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/sentbox"
+        element={isLoggedIn ? <SentboxPage /> : <Navigate to="/" replace />}
+      />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 };
 

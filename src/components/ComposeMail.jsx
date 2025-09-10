@@ -5,7 +5,8 @@ import draftToHtml from "draftjs-to-html";
 import AuthContext from "../store/auth-context";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const FIREBASE_BASE_URL = import.meta.env.VITE_FIREBASE_URL;
+const FIREBASE_BASE_URL =
+  "https://mailboxclient-91321-default-rtdb.firebaseio.com/";
 
 const ComposeMail = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());

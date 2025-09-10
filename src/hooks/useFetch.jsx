@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 const useFetch = (url, state, dispatch) => {
   useEffect(() => {
-    const fetchInbox = async () => {
+    const fetchMails = async () => {
       try {
         const res = await fetch(url);
         const data = await res.json();
@@ -32,7 +32,8 @@ const useFetch = (url, state, dispatch) => {
       }
     };
 
-    const intervalId = setInterval(fetchInbox, 2000);
+    fetchMails();
+    const intervalId = setInterval(fetchMails, 2000);
 
     return () => clearInterval(intervalId);
   }, [url]);

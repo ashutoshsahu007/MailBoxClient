@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 import { LogOut } from "lucide-react";

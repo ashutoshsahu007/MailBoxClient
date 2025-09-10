@@ -6,7 +6,6 @@ export const initialState = {
 export const inboxReducer = (state, action) => {
   switch (action.type) {
     case "SET_MAILS":
-      console.log(state);
       return {
         mails: action.payload,
         unreadCount: action.payload.filter((mail) => !mail.read).length,
