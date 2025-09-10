@@ -7,6 +7,7 @@ import AuthContext from "./store/auth-context";
 import NotFound from "./pages/NotFound";
 import SentboxPage from "./pages/SentboxPage";
 import InboxPage from "./pages/InboxPage";
+import ForgetPassword from "./components/ForgetPassword";
 
 const App = () => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -16,6 +17,10 @@ const App = () => {
       <Route
         path="/"
         element={!isLoggedIn ? <AuthPage /> : <Navigate to="/compose" />}
+      />
+      <Route
+        path="/forget-password"
+        element={!isLoggedIn ? <ForgetPassword /> : <Navigate to="/" />}
       />
       <Route
         path="/compose"

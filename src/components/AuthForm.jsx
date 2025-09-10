@@ -61,7 +61,7 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 bg-gray-50 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-15 bg-gray-50 overflow-hidden">
       {/* Decorative Background */}
       <div className="absolute -top-32 -left-32 w-80 h-80 bg-blue-200 rounded-full opacity-30 blur-3xl"></div>
       <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-red-200 rounded-full opacity-30 blur-3xl"></div>
