@@ -64,6 +64,7 @@ const AuthForm = () => {
         !Login && addToast("SignUp Successful", "success");
         Login && authCtx.login(data.idToken, data.email);
         Login && navigate("/compose");
+        Login && addToast("Login Successful", "success");
       })
       .catch((err) => {
         setLoading(false);
