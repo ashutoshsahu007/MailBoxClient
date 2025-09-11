@@ -46,7 +46,7 @@ const Header = () => {
           <li>
             <button
               onClick={authCtx.logout}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
+              className="flex items-center gap-2 cursor-pointer px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
             >
               <LogOut className="w-4 h-4" />
               Logout

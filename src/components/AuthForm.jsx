@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import AuthContext from "../store/auth-context";
+import { useToast } from "../store/ToastContext";
 
 const AuthForm = () => {
   const [email, setEmail] = useState("");
@@ -10,32 +11,38 @@ const AuthForm = () => {
   const [Login, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
+  const { addToast } = useToast();
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
+
     let url = "";
 
     if (Login) {
       if (!email || !password) {
-        alert("please fill all fields");
+        addToast("please fill all fields", "error");
         return;
       }
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAmJm5iEoE6G5BwhjS9KaQyt9RJaUqLF4A";
     } else {
       if (!email || !password || !confirmPassword) {
-        alert("please fill all fields");
+        addToast("please fill all fields", "error");
         return;
       }
       if (password !== confirmPassword) {
-        alert("Passwords do not match!");
+        addToast("password do not match !");
         return;
       }
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAmJm5iEoE6G5BwhjS9KaQyt9RJaUqLF4A";
     }
+
+    setLoading(true);
 
     fetch(url, {
       method: "POST",
@@ -53,11 +60,16 @@ const AuthForm = () => {
         })
       )
       .then((data) => {
-        !Login && alert("SignUp Successful");
+        setLoading(false);
+        !Login && addToast("SignUp Successful", "success");
         Login && authCtx.login(data.idToken, data.email);
         Login && navigate("/compose");
       })
-      .catch((err) => alert(err.message));
+      .catch((err) => {
+        setLoading(false);
+
+        addToast(err.message, "error");
+      });
   };
 
   return (
@@ -176,8 +188,13 @@ const AuthForm = () => {
             type="submit"
             className="w-full bg-gradient-to-r from-blue-600 to-red-500 hover:opacity-90 text-white rounded-xl py-3.5 font-semibold transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
           >
-            {Login ? "Log In" : "Sign Up"}
-            <ArrowRight className="w-4 h-4" />
+            {loading && (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              </>
+            )}
+            {Login && "Login"}
+            {!Login && "Signup"}
           </button>
         </form>
 
