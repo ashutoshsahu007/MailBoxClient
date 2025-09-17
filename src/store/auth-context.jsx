@@ -21,7 +21,7 @@ export const AuthContextProvider = ({ children }) => {
   const storedEmail = localStorage.getItem("email");
 
   // Check token expiry
-  if (storedLoginTime && Date.now() - storedLoginTime > 5 * 60 * 1000) {
+  if (storedLoginTime && Date.now() - storedLoginTime > 60 * 60 * 1000) {
     localStorage.removeItem("token");
     localStorage.removeItem("loginTime");
     localStorage.removeItem("email");
@@ -55,7 +55,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       const loginTime = Number(localStorage.getItem("loginTime"));
-      const remainingTime = 5 * 60 * 1000 - (Date.now() - loginTime);
+      const remainingTime = 60 * 60 * 1000 - (Date.now() - loginTime);
 
       const timer = setTimeout(logoutHandler, remainingTime);
       return () => clearTimeout(timer); // cleanup

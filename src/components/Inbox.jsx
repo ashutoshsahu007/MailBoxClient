@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useContext, useState } from "react";
+import { useReducer, useContext, useState } from "react";
 import { inboxReducer, initialState } from "../store/mail-reducer";
 import AuthContext from "../store/auth-context";
 import useFetch from "../hooks/useFetch";
@@ -55,28 +55,32 @@ const Inbox = () => {
             Inbox ({state.unreadCount} unread)
           </h2>
 
-          <ul className="space-y-2">
-            {state.mails.map((mail) => (
-              <li
-                key={mail.id}
-                className="flex items-center justify-between p-3 border rounded cursor-pointer hover:bg-gray-50"
-                onClick={() => markAsRead(mail)}
-              >
-                <div className="flex items-center space-x-2">
-                  {!mail.read && (
-                    <span className="h-3 w-3 bg-blue-500 rounded-full"></span>
-                  )}
-                  <span className="font-medium">{mail.subject}</span>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-500">{mail.from}</p>
-                  <p className="text-xs text-gray-400">
-                    {formatDateTime(mail.timestamp)}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          {state.mails.length == 0 ? (
+            <p>inbox empty...</p>
+          ) : (
+            <ul className="space-y-2">
+              {state.mails.map((mail) => (
+                <li
+                  key={mail.id}
+                  className="flex items-center justify-between p-3 border rounded cursor-pointer hover:bg-gray-50"
+                  onClick={() => markAsRead(mail)}
+                >
+                  <div className="flex items-center space-x-2">
+                    {!mail.read && (
+                      <span className="h-3 w-3 bg-blue-500 rounded-full"></span>
+                    )}
+                    <span className="font-medium">{mail.subject}</span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500">{mail.from}</p>
+                    <p className="text-xs text-gray-400">
+                      {formatDateTime(mail.timestamp)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </>
       ) : (
         <div className="border p-4 rounded shadow">

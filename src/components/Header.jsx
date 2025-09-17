@@ -2,10 +2,12 @@ import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 import { LogOut } from "lucide-react";
+import { useToast } from "../store/ToastContext";
 
 const Header = () => {
   const authCtx = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { addToast } = useToast();
 
   // ✅ active link class
   const linkClasses = ({ isActive }) =>
@@ -45,7 +47,10 @@ const Header = () => {
           </li>
           <li>
             <button
-              onClick={authCtx.logout}
+              onClick={() => {
+                authCtx.logout();
+                addToast("logout successfull !!");
+              }}
               className="flex items-center gap-2 cursor-pointer px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
             >
               <LogOut className="w-4 h-4" />
@@ -102,6 +107,7 @@ const Header = () => {
                   onClick={() => {
                     authCtx.logout();
                     setMenuOpen(false);
+                    addToast("logout successfull !!");
                   }}
                   className="flex items-center gap-2 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 w-full"
                 >

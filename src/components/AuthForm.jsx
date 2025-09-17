@@ -24,18 +24,18 @@ const AuthForm = () => {
 
     if (Login) {
       if (!email || !password) {
-        addToast("please fill all fields", "error");
+        addToast("All fields are required.", "error");
         return;
       }
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAmJm5iEoE6G5BwhjS9KaQyt9RJaUqLF4A";
     } else {
       if (!email || !password || !confirmPassword) {
-        addToast("please fill all fields", "error");
+        addToast("All fields are required.", "error");
         return;
       }
       if (password !== confirmPassword) {
-        addToast("password do not match !");
+        addToast("Passwords don't match.");
         return;
       }
       url =
@@ -202,9 +202,14 @@ const AuthForm = () => {
         {/* Switch Form */}
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-600">
-            {Login ? "Don't have an account?" : "Already have an account?"}
+            {Login ? "Don't have an account? " : "Already have an account? "}
             <button
-              onClick={() => setIsLogin((prev) => !prev)}
+              onClick={() => {
+                setEmail("");
+                setPassword("");
+                setConfirmPassword("");
+                setIsLogin((prev) => !prev);
+              }}
               className="font-semibold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
             >
               {Login ? " Sign Up" : " Sign In"}

@@ -4,6 +4,7 @@ import { EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import AuthContext from "../store/auth-context";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { useToast } from "../store/ToastContext";
 
 const FIREBASE_BASE_URL =
   "https://mailboxclient-91321-default-rtdb.firebaseio.com/";
@@ -12,7 +13,10 @@ const ComposeMail = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
+  const [loading, setLoading] = useState(false);
   const authCtx = useContext(AuthContext);
+
+  const { addToast } = useToast();
 
   // Example: logged-in user's email (replace with auth context if available)
   const senderEmail = authCtx.email;
@@ -23,9 +27,11 @@ const ComposeMail = () => {
   const handleSend = async () => {
     try {
       if (!to || !subject) {
-        alert("Recipient and subject are required!");
+        addToast("Recipient and subject are required!");
         return;
       }
+
+      setLoading(true);
 
       const rawContent = convertToRaw(editorState.getCurrentContent());
       const htmlContent = draftToHtml(rawContent);
@@ -56,15 +62,15 @@ const ComposeMail = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      alert("Mail Sent Successfully!");
-
-      // Reset form
+      addToast("Mail Sent Successfully", "success");
       setTo("");
       setSubject("");
       setEditorState(EditorState.createEmpty());
     } catch (error) {
       console.error(error);
-      alert("Failed to send mail");
+      addToast("Failed to send mail", "error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,9 +119,14 @@ const ComposeMail = () => {
         <div className="flex justify-between items-center p-3 border-t">
           <button
             onClick={handleSend}
-            className="bg-blue-600 cursor-pointer text-white px-5 py-2 rounded-md hover:bg-blue-700"
+            className={`bg-blue-600 cursor-pointer flex text-white px-5 py-2 rounded-md hover:bg-blue-700 gap-2`}
           >
-            Send
+            {loading && (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              </>
+            )}
+            {loading ? "Sending..." : "Send"}
           </button>
 
           <div className="flex space-x-3 text-gray-500">
